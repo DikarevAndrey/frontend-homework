@@ -1,22 +1,31 @@
-const set = function setValue(object, key, value) {
-    if (typeof(key) == "string") {
-        key = key.split('.');
-        key.shift();
-    }
-
+function _setValue(object, key, value) {
     if (key.length == 1) {
-        if (!isNaN(key[0])) {
-            object[parseInt(key[0])] = value;
+        const currentKey = key[0];
+        const isCurrentKeyANumber = !isNaN(currentKey);
+
+        if (isCurrentKeyANumber) {
+            const currentKeyAsNumber = parseInt(currentKey, 10);
+            object[currentKeyAsNumber] = value;
+            return; 
+        } else {
+            object[currentKey] = value;
         }
-        object[key[0]] = value;
     } else {
-        var currentKey;
-        currentKey = key.shift();
+        const currentKey = key.shift();
         if (!Array.isArray(object[currentKey])) {
             object[currentKey] = {};
         }
-        setValue(object[currentKey], key, value);
+        _setValue(object[currentKey], key, value);
     }
-    return object
+    return object;
 }
 
+function set(object, key, value) {
+    if (typeof(key) !== "string") {
+        throw TypeError;
+    }
+
+    const keyAsArr = key.split('.').slice(1);
+
+    return _setValue(object, keyAsArr, value);
+}
