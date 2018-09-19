@@ -6,7 +6,7 @@ function _setValue(object, key, value) {
         if (isCurrentKeyANumber) {
             const currentKeyAsNumber = parseInt(currentKey, 10);
             object[currentKeyAsNumber] = value;
-            return; 
+            return object; 
         } else {
             object[currentKey] = value;
         }
